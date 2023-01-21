@@ -7,7 +7,7 @@
     "prebuild": "rm -rf dist",
     "build": "ttsc -p tsconfig.build.json",
     "start": "node dist/server.js",
-    "start:dev": "nodemon --watch '/src' --exec 'ts-node src/server.ts' -e ts",
+    "dev": "nodemon --watch '/src' --exec 'ts-node -r tsconfig-paths/register src/server.ts' -e ts",
     "husky:prepare": "husky install",
     "lint:staged": "lint-staged",
     "test": "jest --passWithNoTests --runInBand --forceExit",
