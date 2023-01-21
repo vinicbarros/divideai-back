@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start:dev": "nodemon --watch '/src' --exec 'ts-node src/server.ts' -e ts"
+    "start:dev": "nodemon --watch '/src' --exec 'ts-node src/server.ts' -e ts",
+    "husky:prepare": "husky install",
+    "lint:staged": "lint-staged"
   },
   "keywords": [],
   "author": "",
@@ -15,6 +17,8 @@
     "@typescript-eslint/parser": "^5.48.2",
     "eslint": "^8.32.0",
     "eslint-config-prettier": "^8.6.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^13.1.0",
     "nodemon": "^2.0.20",
     "prettier": "^2.8.3",
     "ts-node": "^10.9.1",
