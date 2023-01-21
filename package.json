@@ -7,8 +7,10 @@
     "start:dev": "nodemon --watch '/src' --exec 'ts-node src/server.ts' -e ts",
     "husky:prepare": "husky install",
     "lint:staged": "lint-staged",
-    "test:watch": "jest --watch --passWithNoTests --runInBand",
-    "test:staged": "test --findRelatedTests"
+    "test": "jest --passWithNoTests --runInBand --forceExit",
+    "test:watch": "npm test --watch",
+    "test:staged": "npm test --findRelatedTests",
+    "test:coverage": "npm test --coverage --collectCoverageFrom='./src/**'"
   },
   "keywords": [],
   "author": "",
