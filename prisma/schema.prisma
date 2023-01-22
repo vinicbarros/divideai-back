@@ -1,0 +1,76 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model bill {
+  id         Int        @id @default(autoincrement())
+  name       String     @db.VarChar(255)
+  value      Int
+  categoryId Int
+  billStatus billType?
+  expireDate DateTime   @db.Timestamp(6)
+  createdAt  DateTime?  @default(now()) @db.Timestamp(6)
+  category   category   @relation(fields: [categoryId], references: [id])
+  userBill   userBill[]
+}
+
+model category {
+  id   Int    @id @default(autoincrement())
+  name String @db.VarChar(255)
+  bill bill[]
+}
+
+model friendship {
+  id                               Int          @id @default(autoincrement())
+  userId                           Int
+  friendId                         Int
+  requestStatus                    requestType?
+  users_friendship_friendIdTousers users        @relation("friendship_friendIdTousers", fields: [friendId], references: [id])
+  users_friendship_userIdTousers   users        @relation("friendship_userIdTousers", fields: [userId], references: [id])
+}
+
+model session {
+  id     Int    @id @default(autoincrement())
+  userId Int
+  token  String
+  users  users  @relation(fields: [userId], references: [id])
+}
+
+model userBill {
+  id            Int       @id @default(autoincrement())
+  userId        Int
+  billId        Int
+  value         Int
+  paymentStatus billType?
+  bill          bill      @relation(fields: [billId], references: [id])
+  users         users     @relation(fields: [userId], references: [id])
+}
+
+model users {
+  id                                    Int          @id @default(autoincrement())
+  email                                 String       @unique @db.VarChar(255)
+  password                              String?      @db.VarChar(30)
+  createdAt                             DateTime?    @default(now()) @db.Timestamp(6)
+  profileImage                          String?
+  name                                  String       @db.VarChar(255)
+  friendship_friendship_friendIdTousers friendship[] @relation("friendship_friendIdTousers")
+  friendship_friendship_userIdTousers   friendship[] @relation("friendship_userIdTousers")
+  session                               session[]
+  userBill                              userBill[]
+}
+
+enum billType {
+  paid
+  pending
+}
+
+enum requestType {
+  pending
+  accepted
+  rejected
+}
