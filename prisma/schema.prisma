@@ -56,12 +56,19 @@ model users {
   email                                 String       @unique @db.VarChar(255)
   password                              String?      @db.VarChar(30)
   createdAt                             DateTime?    @default(now()) @db.Timestamp(6)
-  profileImage                          String?
-  name                                  String       @db.VarChar(255)
   friendship_friendship_friendIdTousers friendship[] @relation("friendship_friendIdTousers")
   friendship_friendship_userIdTousers   friendship[] @relation("friendship_userIdTousers")
   session                               session[]
   userBill                              userBill[]
+  enrollment                            enrollment[]
+}
+
+model enrollment {
+  id Int @id @default(autoincrement())
+  userId Int
+  name String @db.VarChar(255)
+  profileImage String?
+  users users @relation(fields: [userId], references: [id])
 }
 
 enum billType {
