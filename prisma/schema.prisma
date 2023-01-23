@@ -1,5 +1,6 @@
 generator client {
   provider = "prisma-client-js"
+  engineType = "binary"
 }
 
 datasource db {
@@ -54,21 +55,13 @@ model userBill {
 model users {
   id                                    Int          @id @default(autoincrement())
   email                                 String       @unique @db.VarChar(255)
-  password                              String?      @db.VarChar(30)
+  name String @db.VarChar(255)
+  password                              String?      @db.VarChar(255)
   createdAt                             DateTime?    @default(now()) @db.Timestamp(6)
   friendship_friendship_friendIdTousers friendship[] @relation("friendship_friendIdTousers")
   friendship_friendship_userIdTousers   friendship[] @relation("friendship_userIdTousers")
   session                               session[]
   userBill                              userBill[]
-  enrollment                            enrollment[]
-}
-
-model enrollment {
-  id Int @id @default(autoincrement())
-  userId Int
-  name String @db.VarChar(255)
-  profileImage String?
-  users users @relation(fields: [userId], references: [id])
 }
 
 enum billType {
