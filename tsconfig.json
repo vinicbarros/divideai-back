@@ -10,6 +10,7 @@
     "strict": true,
     "skipLibCheck": true,
     "useUnknownInCatchVariables": false,
+    "lib": ["ES2021.String"],
     "paths": {
       "@/*": ["*"]
     },

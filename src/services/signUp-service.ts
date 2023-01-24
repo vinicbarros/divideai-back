@@ -16,7 +16,6 @@ export async function createUser({ email, password, name }: SignUpParams) {
 
 async function validateEmail(email: string) {
   const emailIsUsed = await userRepository.findUserByEmail(email);
-  console.log(emailIsUsed);
   if (emailIsUsed) throw duplicatedEmailError();
 }
 
