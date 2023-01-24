@@ -9,8 +9,8 @@ export async function createUser({ email, password, name }: SignUpParams) {
 
   return await userRepository.createUser({
     name,
-    password: hashPassword,
     email,
+    password: hashPassword,
   });
 }
 

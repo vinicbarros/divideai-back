@@ -12,3 +12,11 @@ export async function signIn(req: Request, res: Response) {
 
   return res.status(httpStatus.OK).send(createdUser);
 }
+
+export async function logInWithOauthPost(req: Request, res: Response) {
+  const { name, email }: { name: string; email: string } = req.body;
+
+  const result = await authenticationService.logInWithOauth({ name, email });
+
+  return res.status(httpStatus.OK).send(result);
+}

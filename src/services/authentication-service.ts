@@ -5,13 +5,7 @@ import { exclude } from "@/utils/prisma-utils";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
-async function signInPost({
-  email,
-  password,
-}: {
-  email: string;
-  password: string;
-}) {
+async function signInPost({ email, password }: { email: string; password: string }) {
   const user = await getUser(email);
 
   await validatePassword(password, user.password);
@@ -20,6 +14,27 @@ async function signInPost({
 
   return {
     user: exclude(user, "password"),
+    token,
+  };
+}
+
+async function logInWithOauth({ name, email }: { name: string; email: string }) {
+  const findUser = await userRepository.findUserByEmail(email);
+
+  if (!findUser) {
+    const createdUser = await userRepository.createUser({ name, email });
+    const token = await createSession(createdUser.id);
+
+    return {
+      user: exclude(createdUser, "password"),
+      token,
+    };
+  }
+
+  const token = await createSession(findUser.id);
+
+  return {
+    user: exclude(findUser, "password"),
     token,
   };
 }
@@ -56,6 +71,7 @@ type GetUserParams = {
 
 const authenticationService = {
   signInPost,
+  logInWithOauth,
 };
 
 export default authenticationService;

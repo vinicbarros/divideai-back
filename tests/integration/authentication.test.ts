@@ -3,7 +3,7 @@ import httpStatus from "http-status";
 import supertest from "supertest";
 import { cleanDb } from "../helpers";
 import { faker } from "@faker-js/faker";
-import { createUser } from "../factories";
+import { createOauthUser, createUser } from "../factories";
 
 beforeAll(async () => {
   await init();
@@ -93,6 +93,67 @@ describe("POST /auth/sign-in", () => {
 
         expect(response.body.token).toBeDefined();
       });
+    });
+  });
+});
+
+describe("POST /auth/oauth", () => {
+  it("should respond with status 400 when body is not given", async () => {
+    const response = await server.post("/auth/oauth");
+
+    expect(response.status).toBe(httpStatus.BAD_REQUEST);
+  });
+
+  it("should respond with status 400 when body is not valid", async () => {
+    const invalidBody = { [faker.lorem.word()]: faker.lorem.word() };
+
+    const response = await server.post("/auth/oauth").send(invalidBody);
+
+    expect(response.status).toBe(httpStatus.BAD_REQUEST);
+  });
+
+  describe("when body is valid", () => {
+    const generateValidBody = () => ({
+      name: faker.name.firstName(),
+      email: faker.internet.email(),
+    });
+    it("should respond with status 200 and user info when login", async () => {
+      const body = generateValidBody();
+      const user = await createOauthUser(body);
+
+      const response = await server.post("/auth/oauth").send(body);
+
+      expect(response.status).toBe(200);
+      expect(response.body.user).toEqual({
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        createdAt: user.createdAt?.toISOString(),
+      });
+    });
+
+    it("should respond with status 200 and created user info when sign up", async () => {
+      const body = generateValidBody();
+
+      const response = await server.post("/auth/oauth").send(body);
+
+      expect(response.status).toBe(200);
+      expect(response.body.user).toEqual({
+        id: expect.any(Number),
+        name: expect.any(String),
+        email: expect.any(String),
+        createdAt: expect.any(String),
+      });
+    });
+
+    it("should respond with status 200 and user token", async () => {
+      const body = generateValidBody();
+      await createOauthUser(body);
+
+      const response = await server.post("/auth/oauth").send(body);
+
+      expect(response.status).toBe(200);
+      expect(response.body.token).toBeDefined();
     });
   });
 });

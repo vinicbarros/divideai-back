@@ -11,7 +11,16 @@ export async function createUser(params: Partial<users> = {}): Promise<users> {
     data: {
       email: params.email || faker.internet.email(),
       password: hashedPassword,
-      name: faker.name.firstName(),
+      name: params.name || faker.name.firstName(),
+    },
+  });
+}
+
+export async function createOauthUser(params: Partial<users> = {}): Promise<users> {
+  return prisma.users.create({
+    data: {
+      name: params.name || faker.name.firstName(),
+      email: params.email || faker.internet.email(),
     },
   });
 }

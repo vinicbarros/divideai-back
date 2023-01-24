@@ -1,22 +1,20 @@
 import { prisma } from "@/config";
 
-async function createUser({
-  name,
-  password,
-  email,
-}: {
-  name: string;
-  password: string;
-  email: string;
-}) {
+async function createUser({ name, email, password }: CreateUserParams) {
   return await prisma.users.create({
     data: {
+      name,
       email,
       password,
-      name,
     },
   });
 }
+
+type CreateUserParams = {
+  name: string;
+  email: string;
+  password?: string;
+};
 
 async function findUserByEmail(email: string) {
   return await prisma.users.findFirst({
