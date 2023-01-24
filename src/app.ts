@@ -3,7 +3,7 @@ import express, { Express, json } from "express";
 import cors from "cors";
 
 import { loadEnv, connectDb, disconnectDb } from "@/config";
-import { signUpRouter } from "@/routers";
+import { authenticationRouter, signUpRouter } from "@/routers";
 import { handleApplicationErrors } from "@/middlewares";
 
 loadEnv();
@@ -13,6 +13,7 @@ const app = express();
 app.use(cors());
 app.use(json());
 app.use("/signup", signUpRouter);
+app.use("/auth", authenticationRouter);
 app.use(handleApplicationErrors);
 
 export async function init(): Promise<Express> {

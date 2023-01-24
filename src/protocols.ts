@@ -15,4 +15,6 @@ export type enrollmentParams = {
   profileImage: string | undefined;
 };
 
+export type SignInParams = Omit<SignUpParams, "name">;
+
 export type SignOauthParams = Omit<SignUpParams, "password">;
