@@ -24,9 +24,18 @@ async function findUserByEmail(email: string) {
   });
 }
 
+async function findUserById(id: number) {
+  return await prisma.users.findFirst({
+    where: {
+      id,
+    },
+  });
+}
+
 const userRepository = {
   createUser,
   findUserByEmail,
+  findUserById,
 };
 
 export default userRepository;
