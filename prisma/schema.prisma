@@ -13,7 +13,7 @@ model bill {
   name       String     @db.VarChar(255)
   value      Int
   categoryId Int
-  billStatus billType?
+  billStatus billType
   expireDate DateTime   @db.Timestamp(6)
   createdAt  DateTime?  @default(now()) @db.Timestamp(6)
   category   category   @relation(fields: [categoryId], references: [id])
@@ -30,7 +30,7 @@ model friendship {
   id                               Int          @id @default(autoincrement())
   userId                           Int
   friendId                         Int
-  requestStatus                    requestType?
+  requestStatus                    requestType
   users_friendship_friendIdTousers users        @relation("friendship_friendIdTousers", fields: [friendId], references: [id])
   users_friendship_userIdTousers   users        @relation("friendship_userIdTousers", fields: [userId], references: [id])
 }
@@ -47,7 +47,7 @@ model userBill {
   userId        Int
   billId        Int
   value         Int
-  paymentStatus billType?
+  paymentStatus billType
   bill          bill      @relation(fields: [billId], references: [id])
   users         users     @relation(fields: [userId], references: [id])
 }
@@ -65,12 +65,12 @@ model users {
 }
 
 enum billType {
-  paid
-  pending
+  PAID
+  PENDING
 }
 
 enum requestType {
-  pending
-  accepted
-  rejected
+  PENDING
+  ACCEPTED
+  REJECTED
 }
