@@ -44,6 +44,12 @@ async function createUsersBill({
   await billRepository.createUsersBill(list);
 }
 
+async function getResumeBills(userId: number) {
+  const resume = await billRepository.findResumeUsersBill(userId);
+
+  return resume;
+}
+
 type ListType = {
   userId: number;
   value: number;
@@ -53,6 +59,7 @@ type ListType = {
 
 const billService = {
   postNewBill,
+  getResumeBills,
 };
 
 export default billService;

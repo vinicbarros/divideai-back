@@ -28,6 +28,34 @@ async function createUsersBill(data: UsersListParams) {
   });
 }
 
+async function findResumeUsersBill(userId: number) {
+  return await prisma.userBill.findMany({
+    where: {
+      userId,
+    },
+    select: {
+      bill: {
+        select: {
+          id: true,
+          name: true,
+          value: true,
+          createdAt: true,
+          category: {
+            select: {
+              name: true,
+            },
+          },
+          _count: {
+            select: {
+              userBill: true,
+            },
+          },
+        },
+      },
+    },
+  });
+}
+
 type CreateBillParams = Omit<BillDataParams, "usersBill">;
 
 type UsersListParams = {
@@ -41,6 +69,7 @@ const billRepository = {
   findCategoryById,
   create,
   createUsersBill,
+  findResumeUsersBill,
 };
 
 export default billRepository;

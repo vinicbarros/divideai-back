@@ -17,3 +17,10 @@ export async function createBill(req: AuthenticatedRequest, res: Response) {
 
   return res.status(httpStatus.CREATED).send(result);
 }
+
+export async function getShortBills(req: AuthenticatedRequest, res: Response) {
+  const { userId } = req;
+
+  const result = await billService.getResumeBills(userId);
+  return res.status(httpStatus.OK).send(result);
+}

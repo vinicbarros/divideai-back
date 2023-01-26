@@ -1,5 +1,6 @@
 import { prisma } from "@/config";
 import { faker } from "@faker-js/faker";
+import { billType } from "@prisma/client";
 import dayjs from "dayjs";
 
 export async function generateValidBillBody(categoryId?: number) {
@@ -13,6 +14,35 @@ export async function generateValidBillBody(categoryId?: number) {
   };
 
   return billBody;
+}
+
+export async function createBill(categoryId: number) {
+  return await prisma.bill.create({
+    data: {
+      name: faker.lorem.word(),
+      value: faker.datatype.number(),
+      categoryId: categoryId,
+      billStatus: billType.PENDING,
+      expireDate: dayjs().add(5, "day").toDate(),
+    },
+  });
+}
+
+export async function createUsersBill({
+  userId,
+  billId,
+}: {
+  userId: number;
+  billId: number;
+}) {
+  return await prisma.userBill.create({
+    data: {
+      billId,
+      userId,
+      value: faker.datatype.number({ max: 50 }),
+      paymentStatus: billType.PAID,
+    },
+  });
 }
 
 export async function createCategory() {
