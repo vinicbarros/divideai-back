@@ -24,3 +24,12 @@ export async function getShortBills(req: AuthenticatedRequest, res: Response) {
   const result = await billService.getResumeBills(userId);
   return res.status(httpStatus.OK).send(result);
 }
+
+export async function getBills(req: AuthenticatedRequest, res: Response) {
+  const billId = Number(req.params.billId);
+  const { userId } = req;
+
+  const result = await billService.getBill({ userId, billId });
+
+  return res.status(httpStatus.OK).send(result);
+}

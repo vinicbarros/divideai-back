@@ -1,4 +1,4 @@
-import { badRequestError, notFoundError } from "@/errors";
+import { badRequestError, notFoundError, unauthorizedError } from "@/errors";
 import { BillDataParams, UserListType } from "@/protocols";
 import billRepository from "@/repositories/bill-reopository";
 import userRepository from "@/repositories/user-repository";
@@ -22,7 +22,6 @@ async function postNewBill(billData: BillDataParams) {
     id: createdBill.id,
   };
 }
-
 async function createUsersBill({
   billId,
   userList,
@@ -50,6 +49,23 @@ async function getResumeBills(userId: number) {
   return resume;
 }
 
+async function getBill({ userId, billId }: { userId: number; billId: number }) {
+  if (isNaN(billId) || billId < 1) throw badRequestError();
+
+  const bill = await billRepository.findBillById(billId);
+  if (!bill) throw notFoundError();
+
+  const userValid = await billRepository.findUserBillByUserIdAndBillId({
+    userId,
+    billId,
+  });
+  if (!userValid) throw unauthorizedError();
+
+  const billDetails = await billRepository.findBillDetails(billId);
+
+  return billDetails;
+}
+
 type ListType = {
   userId: number;
   value: number;
@@ -60,6 +76,7 @@ type ListType = {
 const billService = {
   postNewBill,
   getResumeBills,
+  getBill,
 };
 
 export default billService;

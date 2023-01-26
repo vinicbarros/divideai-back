@@ -56,6 +56,61 @@ async function findResumeUsersBill(userId: number) {
   });
 }
 
+async function findBillById(id: number) {
+  return await prisma.bill.findFirst({
+    where: {
+      id,
+    },
+  });
+}
+
+async function findUserBillByUserIdAndBillId({
+  userId,
+  billId,
+}: {
+  userId: number;
+  billId: number;
+}) {
+  return await prisma.userBill.findFirst({
+    where: {
+      userId,
+      billId,
+    },
+  });
+}
+
+async function findBillDetails(billId: number) {
+  return prisma.bill.findFirst({
+    where: {
+      id: billId,
+    },
+    select: {
+      id: true,
+      name: true,
+      value: true,
+      expireDate: true,
+      billStatus: true,
+      category: {
+        select: {
+          name: true,
+        },
+      },
+      userBill: {
+        select: {
+          value: true,
+          paymentStatus: true,
+          users: {
+            select: {
+              name: true,
+              id: true,
+            },
+          },
+        },
+      },
+    },
+  });
+}
+
 type CreateBillParams = Omit<BillDataParams, "usersBill">;
 
 type UsersListParams = {
@@ -70,6 +125,9 @@ const billRepository = {
   create,
   createUsersBill,
   findResumeUsersBill,
+  findBillById,
+  findUserBillByUserIdAndBillId,
+  findBillDetails,
 };
 
 export default billRepository;

@@ -196,7 +196,116 @@ describe("POST /bill", () => {
 });
 
 //essa rota pega uma unica conta com as informações adicionais
-//describe("GET /bill/:billId", () => {});
+describe("GET /bill/:billId", () => {
+  it("should respond with status 401 if no token is no given", async () => {
+    const response = await server.get("/bill/1");
+
+    expect(response.status).toBe(httpStatus.UNAUTHORIZED);
+  });
+
+  it("should respond with status 401 if given token is not valid", async () => {
+    const token = faker.lorem.word();
+
+    const response = await server.get("/bill/1").set("Authorization", `Bearer ${token}`);
+
+    expect(response.status).toBe(httpStatus.UNAUTHORIZED);
+  });
+
+  it("should respond with status 401 if there is no session for given token", async () => {
+    const userWithoutSession = await createUser();
+    const token = jwt.sign(
+      { userId: userWithoutSession.id },
+      process.env.JWT_SECRET as string
+    );
+
+    const response = await server.get("/bill/1").set("Authorization", `Bearer ${token}`);
+
+    expect(response.status).toBe(httpStatus.UNAUTHORIZED);
+  });
+
+  describe("when token is valid", () => {
+    it("should respond with status 400 if billId param is not valid", async () => {
+      const token = await generateValidToken();
+
+      const response = await server
+        .get("/bill/b")
+        .set("Authorization", `Bearer ${token}`);
+
+      expect(response.status).toBe(httpStatus.BAD_REQUEST);
+    });
+
+    it("should respond with status 404 if bill doesn't exist", async () => {
+      const token = await generateValidToken();
+
+      const response = await server
+        .get(`/bill/${faker.datatype.number()}`)
+        .set("Authorization", `Bearer ${token}`);
+
+      expect(response.status).toBe(httpStatus.NOT_FOUND);
+    });
+
+    describe("when param is valid", () => {
+      it("should respond with status 401 if the userId is not related to the bill", async () => {
+        const user = await createUser();
+        const token = await generateValidToken(user);
+        const category = await createCategory();
+        const bill = await createBill(category.id);
+        const anotherUser = await createUser();
+        const data = {
+          billId: bill.id,
+          userId: anotherUser.id,
+        };
+
+        await createUsersBill(data);
+
+        const response = await server
+          .get(`/bill/${bill.id}`)
+          .set("Authorization", `Bearer ${token}`);
+
+        expect(response.status).toBe(httpStatus.UNAUTHORIZED);
+      });
+
+      it("should respond with status 200 and bill data", async () => {
+        const user = await createUser();
+        const token = await generateValidToken(user);
+        const category = await createCategory();
+        const bill = await createBill(category.id);
+        const data = {
+          billId: bill.id,
+          userId: user.id,
+        };
+
+        const userBill = await createUsersBill(data);
+
+        const response = await server
+          .get(`/bill/${bill.id}`)
+          .set("Authorization", `Bearer ${token}`);
+
+        expect(response.status).toBe(httpStatus.OK);
+        expect(response.body).toEqual({
+          id: bill.id,
+          name: bill.name,
+          value: bill.value,
+          expireDate: bill.expireDate.toISOString(),
+          billStatus: bill.billStatus,
+          category: {
+            name: category.name,
+          },
+          userBill: [
+            {
+              value: userBill.value,
+              paymentStatus: userBill.paymentStatus,
+              users: {
+                name: user.name,
+                id: user.id,
+              },
+            },
+          ],
+        });
+      });
+    });
+  });
+});
 
 //essa rota deleta uma conta
 //describe("DEL /bill/:billId", () => {});
