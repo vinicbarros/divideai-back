@@ -21,6 +21,7 @@ export type BillDataParams = {
   name: string;
   value: number;
   categoryId: number;
+  ownerId: number;
   expireDate: Date;
   billStatus: billType;
   usersBill: {

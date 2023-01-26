@@ -13,10 +13,12 @@ model bill {
   name       String     @db.VarChar(255)
   value      Int
   categoryId Int
+  ownerId    Int
   billStatus billType
   expireDate DateTime   @db.Timestamp(6)
   createdAt  DateTime?  @default(now()) @db.Timestamp(6)
   category   category   @relation(fields: [categoryId], references: [id])
+  users      users      @relation(fields: [ownerId], references: [id])
   userBill   userBill[]
 }
 
@@ -62,6 +64,7 @@ model users {
   friendship_friendship_userIdTousers   friendship[] @relation("friendship_userIdTousers")
   session                               session[]
   userBill                              userBill[]
+  bill                                  bill[]
 }
 
 enum billType {
