@@ -66,6 +66,36 @@ async function getBill({ userId, billId }: { userId: number; billId: number }) {
   return billDetails;
 }
 
+async function deleteBills({ userId, billId }: { userId: number; billId: number }) {
+  if (isNaN(billId) || billId < 1) throw badRequestError();
+
+  const bill = await billRepository.findBillById(billId);
+  if (!bill) throw notFoundError();
+  if (bill.ownerId !== userId) throw unauthorizedError();
+
+  const deletedBill = await billRepository.deleteBillAndUserBills(billId);
+
+  return deletedBill;
+}
+
+async function payBills({ userId, billId }: { userId: number; billId: number }) {
+  if (isNaN(billId) || billId < 1) throw badRequestError();
+
+  const bill = await billRepository.findBillById(billId);
+  if (!bill) throw notFoundError();
+
+  const userValid = await billRepository.findUserBillByUserIdAndBillId({
+    userId,
+    billId,
+  });
+  if (!userValid) throw unauthorizedError();
+
+  const userBill = await billRepository.findUserBillByUserIdAndBillId({ userId, billId });
+  const payBill = await billRepository.putUserBill(userBill.id);
+
+  return payBill;
+}
+
 type ListType = {
   userId: number;
   value: number;
@@ -77,6 +107,8 @@ const billService = {
   postNewBill,
   getResumeBills,
   getBill,
+  deleteBills,
+  payBills,
 };
 
 export default billService;

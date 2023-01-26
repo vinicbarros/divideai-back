@@ -16,12 +16,19 @@ export async function generateValidBillBody(categoryId?: number) {
   return billBody;
 }
 
-export async function createBill(categoryId: number) {
+export async function createBill({
+  categoryId,
+  ownerId,
+}: {
+  categoryId: number;
+  ownerId: number;
+}) {
   return await prisma.bill.create({
     data: {
       name: faker.lorem.word(),
       value: faker.datatype.number(),
       categoryId: categoryId,
+      ownerId: ownerId,
       billStatus: billType.PENDING,
       expireDate: dayjs().add(5, "day").toDate(),
     },

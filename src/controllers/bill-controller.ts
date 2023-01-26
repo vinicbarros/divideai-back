@@ -5,6 +5,7 @@ import httpStatus from "http-status";
 
 export async function createBill(req: AuthenticatedRequest, res: Response) {
   const { name, value, categoryId, billStatus, expireDate, usersBill } = req.body;
+  const ownerId = req.userId;
 
   const result = await billService.postNewBill({
     name,
@@ -13,6 +14,7 @@ export async function createBill(req: AuthenticatedRequest, res: Response) {
     billStatus,
     expireDate,
     usersBill,
+    ownerId,
   });
 
   return res.status(httpStatus.CREATED).send(result);
@@ -32,4 +34,22 @@ export async function getBills(req: AuthenticatedRequest, res: Response) {
   const result = await billService.getBill({ userId, billId });
 
   return res.status(httpStatus.OK).send(result);
+}
+
+export async function deleteBill(req: AuthenticatedRequest, res: Response) {
+  const billId = Number(req.params.billId);
+  const { userId } = req;
+
+  await billService.deleteBills({ userId, billId });
+
+  return res.sendStatus(httpStatus.OK);
+}
+
+export async function updateBills(req: AuthenticatedRequest, res: Response) {
+  const billId = Number(req.params.billId);
+  const { userId } = req;
+
+  await billService.payBills({ userId, billId });
+
+  return res.sendStatus(httpStatus.OK);
 }

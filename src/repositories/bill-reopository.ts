@@ -17,6 +17,7 @@ async function create(data: CreateBillParams) {
       value: data.value,
       expireDate: data.expireDate,
       categoryId: data.categoryId,
+      ownerId: data.ownerId,
       billStatus: data.billStatus,
     },
   });
@@ -89,6 +90,7 @@ async function findBillDetails(billId: number) {
       name: true,
       value: true,
       expireDate: true,
+      ownerId: true,
       billStatus: true,
       category: {
         select: {
@@ -111,6 +113,24 @@ async function findBillDetails(billId: number) {
   });
 }
 
+async function deleteBillAndUserBills(billId: number) {
+  return await prisma.$transaction([
+    prisma.userBill.deleteMany({ where: { billId } }),
+    prisma.bill.delete({ where: { id: billId } }),
+  ]);
+}
+
+async function putUserBill(id: number) {
+  return await prisma.userBill.update({
+    where: {
+      id,
+    },
+    data: {
+      paymentStatus: billType.PAID,
+    },
+  });
+}
+
 type CreateBillParams = Omit<BillDataParams, "usersBill">;
 
 type UsersListParams = {
@@ -128,6 +148,8 @@ const billRepository = {
   findBillById,
   findUserBillByUserIdAndBillId,
   findBillDetails,
+  deleteBillAndUserBills,
+  putUserBill,
 };
 
 export default billRepository;
