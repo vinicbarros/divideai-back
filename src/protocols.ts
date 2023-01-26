@@ -1,3 +1,5 @@
+import { billType } from "@prisma/client";
+
 export type ApplicationError = {
   name: string;
   message: string;
@@ -14,6 +16,23 @@ export type enrollmentParams = {
   name: string;
   profileImage: string | undefined;
 };
+
+export type BillDataParams = {
+  name: string;
+  value: number;
+  categoryId: number;
+  expireDate: Date;
+  billStatus: billType;
+  usersBill: {
+    userId: number;
+    value: number;
+  }[];
+};
+
+export type UserListType = {
+  userId: number;
+  value: number;
+}[];
 
 export type SignInParams = Omit<SignUpParams, "name">;
 

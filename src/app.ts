@@ -3,7 +3,12 @@ import express, { Express, json } from "express";
 import cors from "cors";
 
 import { loadEnv, connectDb, disconnectDb } from "@/config";
-import { authenticationRouter, friendshipRouter, signUpRouter } from "@/routers";
+import {
+  authenticationRouter,
+  billRouter,
+  friendshipRouter,
+  signUpRouter,
+} from "@/routers";
 import { handleApplicationErrors } from "@/middlewares";
 
 loadEnv();
@@ -15,6 +20,7 @@ app.use(json());
 app.use("/signup", signUpRouter);
 app.use("/auth", authenticationRouter);
 app.use("/friend", friendshipRouter);
+app.use("/bill", billRouter);
 app.use(handleApplicationErrors);
 
 export async function init(): Promise<Express> {
