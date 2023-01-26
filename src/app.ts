@@ -7,6 +7,7 @@ import {
   authenticationRouter,
   billRouter,
   friendshipRouter,
+  searchRouter,
   signUpRouter,
 } from "@/routers";
 import { handleApplicationErrors } from "@/middlewares";
@@ -21,6 +22,7 @@ app.use("/signup", signUpRouter);
 app.use("/auth", authenticationRouter);
 app.use("/friend", friendshipRouter);
 app.use("/bill", billRouter);
+app.use("/search", searchRouter);
 app.use(handleApplicationErrors);
 
 export async function init(): Promise<Express> {
