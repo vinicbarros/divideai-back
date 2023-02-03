@@ -81,7 +81,6 @@ describe("POST /auth/sign-in", () => {
           id: user.id,
           name: user.name,
           email: user.email,
-          createdAt: user.createdAt?.toISOString(),
         });
       });
 
@@ -128,7 +127,6 @@ describe("POST /auth/oauth", () => {
         id: user.id,
         name: user.name,
         email: user.email,
-        createdAt: user.createdAt?.toISOString(),
       });
     });
 
@@ -142,7 +140,6 @@ describe("POST /auth/oauth", () => {
         id: expect.any(Number),
         name: expect.any(String),
         email: expect.any(String),
-        createdAt: expect.any(String),
       });
     });
 

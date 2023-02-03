@@ -1,7 +1,6 @@
 import { invalidCredentialsError } from "@/errors";
 import sessionRepository from "@/repositories/session-repository";
 import userRepository from "@/repositories/user-repository";
-import { exclude } from "@/utils/prisma-utils";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
@@ -13,7 +12,11 @@ async function signInPost({ email, password }: { email: string; password: string
   const token = await createSession(user.id);
 
   return {
-    user: exclude(user, "password"),
+    user: {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+    },
     token,
   };
 }
@@ -26,7 +29,11 @@ async function logInWithOauth({ name, email }: { name: string; email: string }) 
     const token = await createSession(createdUser.id);
 
     return {
-      user: exclude(createdUser, "password"),
+      user: {
+        id: createdUser.id,
+        name: createdUser.name,
+        email: createdUser.email,
+      },
       token,
     };
   }
@@ -34,7 +41,11 @@ async function logInWithOauth({ name, email }: { name: string; email: string }) 
   const token = await createSession(findUser.id);
 
   return {
-    user: exclude(findUser, "password"),
+    user: {
+      id: findUser.id,
+      name: findUser.name,
+      email: findUser.email,
+    },
     token,
   };
 }
