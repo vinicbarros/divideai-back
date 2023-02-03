@@ -6,7 +6,7 @@
   "scripts": {
     "prebuild": "rm -rf dist",
     "build": "ttsc -p tsconfig.build.json",
-    "start": "node dist/server.js",
+    "start": "NODE_ENV=prod node dist/server.js",
     "dev": "NODE_ENV=development nodemon --watch \"src/\" --exec \"ts-node -r tsconfig-paths/register ./src/server.ts\" -e ts",
     "husky:prepare": "husky install",
     "migration:run": "prisma migrate deploy",
@@ -20,6 +20,7 @@
     "test:migration:run": "npm run test:load-envs prisma migrate deploy",
     "test:migration:generate": "npm run test:load-envs prisma migrate dev",
     "dev:load-envs": "dotenv -e .env.development",
+    "dev:migrate:run": "npm run dev:load-envs prisma migrate deploy && npm run start",
     "dev:migration:run": "npm run dev:load-envs prisma migrate deploy",
     "dev:migration:generate": "npm run dev:load-envs prisma migrate dev"
   },
