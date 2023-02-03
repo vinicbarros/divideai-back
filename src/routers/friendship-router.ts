@@ -16,7 +16,7 @@ friendshipRouter
   .post("/send", sendFriendRequest)
   .get("/send", getYourSendedFriendRequests)
   .put("/send", acceptOrRejectFriendRequests)
-  .delete("/send", deleteSendedFriendRequests)
+  .delete("/delete/:friendRequestId", deleteSendedFriendRequests)
   .get("/request", getYourFriendRequests)
   .get("/", getFriendsList);
 

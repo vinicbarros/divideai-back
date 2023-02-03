@@ -1,6 +1,6 @@
 import { badRequestError, notFoundError, unauthorizedError } from "@/errors";
 import { BillDataParams, UserListType } from "@/protocols";
-import billRepository from "@/repositories/bill-reopository";
+import billRepository from "@/repositories/bill-repository";
 import userRepository from "@/repositories/user-repository";
 import { billType } from "@prisma/client";
 
@@ -22,6 +22,7 @@ async function postNewBill(billData: BillDataParams) {
     id: createdBill.id,
   };
 }
+
 async function createUsersBill({
   billId,
   userList,
@@ -32,10 +33,11 @@ async function createUsersBill({
   billStatus: billType;
 }) {
   const list = [...userList] as ListType;
+
   for (let i = 0; i < list.length; i++) {
     list[i].billId = billId;
     list[i].paymentStatus = billStatus;
-
+    Reflect.deleteProperty(list[i], "name");
     const user = await userRepository.findUserById(list[i].userId);
     if (!user) throw badRequestError();
   }
@@ -96,6 +98,12 @@ async function payBills({ userId, billId }: { userId: number; billId: number }) 
   return payBill;
 }
 
+async function getCategory() {
+  const categories = await billRepository.findCategories();
+
+  return categories;
+}
+
 type ListType = {
   userId: number;
   value: number;
@@ -109,6 +117,7 @@ const billService = {
   getBill,
   deleteBills,
   payBills,
+  getCategory,
 };
 
 export default billService;

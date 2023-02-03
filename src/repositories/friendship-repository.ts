@@ -35,6 +35,7 @@ async function getPendingFriendRequestYouReceived(userId: number) {
       requestStatus: requestType.PENDING,
     },
     select: {
+      id: true,
       users_friendship_userIdTousers: {
         select: {
           id: true,
@@ -53,6 +54,7 @@ async function getPendingFriendRequestYouSended(userId: number) {
       requestStatus: requestType.PENDING,
     },
     select: {
+      id: true,
       users_friendship_friendIdTousers: {
         select: {
           id: true,
@@ -101,6 +103,7 @@ async function getAcceptedFriendRequestYouReceived(userId: number) {
       requestStatus: requestType.ACCEPTED,
     },
     select: {
+      id: true,
       users_friendship_userIdTousers: {
         select: {
           id: true,
@@ -119,6 +122,7 @@ async function getAcceptedFriendRequestYouSended(userId: number) {
       requestStatus: requestType.ACCEPTED,
     },
     select: {
+      id: true,
       users_friendship_friendIdTousers: {
         select: {
           id: true,

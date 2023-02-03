@@ -190,7 +190,7 @@ describe("GET /friend/send", () => {
         friendId: friend.id,
       };
 
-      await createFriendRequest(body);
+      const friendRequest = await createFriendRequest(body);
 
       const response = await server
         .get("/friend/send")
@@ -199,6 +199,7 @@ describe("GET /friend/send", () => {
       expect(response.status).toBe(httpStatus.OK);
       expect(response.body).toEqual([
         {
+          friendRequestId: friendRequest.id,
           id: friend.id,
           name: friend.name,
           email: friend.email,
@@ -262,7 +263,7 @@ describe("GET /friend/request", () => {
         friendId: user.id,
       };
 
-      await createFriendRequest(body);
+      const friendRequest = await createFriendRequest(body);
 
       const response = await server
         .get("/friend/request")
@@ -271,6 +272,7 @@ describe("GET /friend/request", () => {
       expect(response.status).toBe(httpStatus.OK);
       expect(response.body).toEqual([
         {
+          friendRequestId: friendRequest.id,
           id: friend.id,
           name: friend.name,
           email: friend.email,
@@ -438,7 +440,7 @@ describe("PUT /friend/send", () => {
 
 describe("DEL /friend/send", () => {
   it("should respond with status 401 if no token is no given", async () => {
-    const response = await server.delete("/friend/send");
+    const response = await server.delete("/friend/delete");
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
@@ -447,7 +449,7 @@ describe("DEL /friend/send", () => {
     const token = faker.lorem.word();
 
     const response = await server
-      .delete("/friend/send")
+      .delete("/friend/delete")
       .set("Authorization", `Bearer ${token}`);
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
@@ -461,7 +463,7 @@ describe("DEL /friend/send", () => {
     );
 
     const response = await server
-      .delete("/friend/send")
+      .delete("/friend/delete")
       .set("Authorization", `Bearer ${token}`);
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
@@ -472,12 +474,9 @@ describe("DEL /friend/send", () => {
       const user = await createUser();
       const token = await generateValidToken(user);
 
-      const body = { friendRequestId: 0 };
-
       const response = await server
-        .delete("/friend/send")
-        .set("Authorization", `Bearer ${token}`)
-        .send(body);
+        .delete(`/friend/delete/${0}`)
+        .set("Authorization", `Bearer ${token}`);
 
       expect(response.status).toBe(httpStatus.BAD_REQUEST);
     });
@@ -486,12 +485,9 @@ describe("DEL /friend/send", () => {
       const user = await createUser();
       const token = await generateValidToken(user);
 
-      const body = { friendRequestId: 1 };
-
       const response = await server
-        .delete("/friend/send")
-        .set("Authorization", `Bearer ${token}`)
-        .send(body);
+        .delete(`/friend/delete/${1}`)
+        .set("Authorization", `Bearer ${token}`);
 
       expect(response.status).toBe(httpStatus.NOT_FOUND);
     });
@@ -508,12 +504,9 @@ describe("DEL /friend/send", () => {
           friendId: friend.id,
         });
 
-        const body = { friendRequestId: friendRequest.id };
-
         const response = await server
-          .delete("/friend/send")
-          .set("Authorization", `Bearer ${token}`)
-          .send(body);
+          .delete(`/friend/delete/${friendRequest.id}`)
+          .set("Authorization", `Bearer ${token}`);
 
         expect(response.status).toBe(httpStatus.CONFLICT);
       });
@@ -528,12 +521,9 @@ describe("DEL /friend/send", () => {
           friendId: friend.id,
         });
 
-        const body = { friendRequestId: friendRequest.id };
-
         const response = await server
-          .delete("/friend/send")
-          .set("Authorization", `Bearer ${token}`)
-          .send(body);
+          .delete(`/friend/delete/${friendRequest.id}`)
+          .set("Authorization", `Bearer ${token}`);
 
         expect(response.status).toBe(httpStatus.OK);
       });
@@ -591,7 +581,7 @@ describe("GET /friend", () => {
         friendId: friend.id,
       };
 
-      await createAcceptedFriendRequest(body);
+      const friendRequest = await createAcceptedFriendRequest(body);
 
       const response = await server
         .get("/friend")
@@ -601,6 +591,7 @@ describe("GET /friend", () => {
       expect(response.body).toEqual([
         {
           id: friend.id,
+          friendRequestId: friendRequest.id,
           name: friend.name,
           email: friend.email,
         },
