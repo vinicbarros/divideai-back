@@ -32,22 +32,26 @@ async function sendFriendRequestPost({
 
 async function receivedFriendRequestOfUser(userId: number) {
   const result = await friendshipRepository.getPendingFriendRequestYouReceived(userId);
-  const usersArr = [];
 
-  result.forEach((user) => {
-    usersArr.push(user.users_friendship_userIdTousers);
+  const friends: FriendList[] = [];
+  result.forEach((user, index) => {
+    friends.push(user.users_friendship_userIdTousers);
+    friends[index].friendRequestId = user.id;
   });
-  return usersArr;
+
+  return friends;
 }
 
 async function sendedFriendRequestOfUser(userId: number) {
   const result = await friendshipRepository.getPendingFriendRequestYouSended(userId);
-  const usersArr = [];
 
-  result.forEach((user) => {
-    usersArr.push(user.users_friendship_friendIdTousers);
+  const friends: FriendList[] = [];
+  result.forEach((user, index) => {
+    friends.push(user.users_friendship_friendIdTousers);
+    friends[index].friendRequestId = user.id;
   });
-  return usersArr;
+
+  return friends;
 }
 
 async function acceptOrRejectFriendRequest({
@@ -76,20 +80,20 @@ async function acceptOrRejectFriendRequest({
 
 async function deleteSendedFriendRequest({
   userId,
-  friendRequestId,
+  idFriendR,
 }: {
   userId: number;
-  friendRequestId: number;
+  idFriendR: number;
 }) {
-  if (isNaN(friendRequestId) || friendRequestId < 1) throw badRequestError();
+  if (isNaN(idFriendR) || idFriendR < 1) throw badRequestError();
 
-  const friendRequest = await friendshipRepository.getFriendRequestById(friendRequestId);
+  const friendRequest = await friendshipRepository.getFriendRequestById(idFriendR);
   if (!friendRequest) throw notFoundError();
 
-  if (friendRequest.userId !== userId)
+  if (friendRequest.userId !== userId && friendRequest.friendId !== userId)
     throw conflictError("You don't have access to delete this friend request!");
 
-  const deletedFriendRequest = friendshipRepository.deleteFriendRequest(friendRequestId);
+  const deletedFriendRequest = friendshipRepository.deleteFriendRequest(idFriendR);
 
   return deletedFriendRequest;
 }
@@ -99,15 +103,18 @@ async function getYourFriendsList(userId: number) {
     await friendshipRepository.getAcceptedFriendRequestYouSended(userId);
   const acceptedReceivedRequests =
     await friendshipRepository.getAcceptedFriendRequestYouReceived(userId);
+  const friendsReceived: FriendList[] = [];
+  const friendsSended: FriendList[] = [];
+  acceptedReceivedRequests.forEach((user, index) => {
+    friendsReceived.push(user.users_friendship_userIdTousers);
+    friendsReceived[index].friendRequestId = user.id;
+  });
+  acceptedSendedRequests.forEach((user, index) => {
+    friendsSended.push(user.users_friendship_friendIdTousers);
+    friendsSended[index].friendRequestId = user.id;
+  });
 
-  const friends = [];
-  acceptedReceivedRequests.forEach((user) =>
-    friends.push(user.users_friendship_userIdTousers)
-  );
-  acceptedSendedRequests.forEach((user) =>
-    friends.push(user.users_friendship_friendIdTousers)
-  );
-  return friends;
+  return [...friendsReceived, ...friendsSended];
 }
 
 async function checkUserById(id: number) {
@@ -130,6 +137,13 @@ type updateFriendRequestType = {
   userId: number;
   friendRequestId: number;
   requestStatus: requestType;
+};
+
+type FriendList = {
+  id: number;
+  friendRequestId?: number;
+  name: string;
+  email: string;
 };
 
 export default friendshipService;
