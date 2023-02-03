@@ -15,6 +15,7 @@ export async function getYourFriendRequests(req: AuthenticatedRequest, res: Resp
   const { userId } = req;
 
   const result = await friendshipService.receivedFriendRequestOfUser(userId);
+
   return res.status(httpStatus.OK).send(result);
 }
 
@@ -48,9 +49,10 @@ export async function deleteSendedFriendRequests(
   res: Response
 ) {
   const { userId } = req;
-  const { friendRequestId } = req.body;
+  const { friendRequestId } = req.params;
+  const idFriendR = Number(friendRequestId);
 
-  await friendshipService.deleteSendedFriendRequest({ userId, friendRequestId });
+  await friendshipService.deleteSendedFriendRequest({ userId, idFriendR });
   return res.sendStatus(httpStatus.OK);
 }
 
