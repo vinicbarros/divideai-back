@@ -10,7 +10,13 @@ export async function generateValidBillBody(categoryId?: number) {
     categoryId: categoryId || faker.datatype.number(),
     expireDate: dayjs().add(7, "day").toDate(),
     billStatus: "PENDING",
-    usersBill: [{ userId: faker.datatype.number(), value: faker.datatype.number() }],
+    usersBill: [
+      {
+        userId: faker.datatype.number(),
+        value: faker.datatype.number(),
+        name: faker.name.firstName(),
+      },
+    ],
   };
 
   return billBody;

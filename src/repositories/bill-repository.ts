@@ -54,6 +54,11 @@ async function findResumeUsersBill(userId: number) {
         },
       },
     },
+    orderBy: [
+      {
+        id: "desc",
+      },
+    ],
   });
 }
 
@@ -131,6 +136,10 @@ async function putUserBill(id: number) {
   });
 }
 
+async function findCategories() {
+  return await prisma.category.findMany();
+}
+
 type CreateBillParams = Omit<BillDataParams, "usersBill">;
 
 type UsersListParams = {
@@ -150,6 +159,7 @@ const billRepository = {
   findBillDetails,
   deleteBillAndUserBills,
   putUserBill,
+  findCategories,
 };
 
 export default billRepository;

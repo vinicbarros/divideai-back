@@ -53,3 +53,9 @@ export async function updateBills(req: AuthenticatedRequest, res: Response) {
 
   return res.sendStatus(httpStatus.OK);
 }
+
+export async function getCategories(req: AuthenticatedRequest, res: Response) {
+  const result = await billService.getCategory();
+
+  return res.status(httpStatus.OK).send(result);
+}

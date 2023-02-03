@@ -182,8 +182,16 @@ describe("POST /bill", () => {
           expireDate: dayjs().add(7, "day").toDate(),
           billStatus: "PENDING",
           usersBill: [
-            { userId: friend.id, value: faker.datatype.number({ min: 10, max: 50 }) },
-            { userId: user.id, value: faker.datatype.number({ min: 10, max: 50 }) },
+            {
+              userId: friend.id,
+              value: faker.datatype.number({ min: 10, max: 50 }),
+              name: faker.name.firstName(),
+            },
+            {
+              userId: user.id,
+              value: faker.datatype.number({ min: 10, max: 50 }),
+              name: faker.name.firstName(),
+            },
           ],
         };
 
