@@ -10,7 +10,7 @@
     "dev": "NODE_ENV=development nodemon --watch \"src/\" --exec \"ts-node -r tsconfig-paths/register ./src/server.ts\" -e ts",
     "husky:prepare": "husky install",
     "migration:run": "prisma migrate deploy",
-    "migration:generate": "npm run dev:load-envs prisma migrate dev",
+    "migration:generate": "npm run dev:load-envs prisma migrate dev && npm run dev:seed",
     "lint:staged": "lint-staged",
     "test": "jest --passWithNoTests --runInBand --forceExit",
     "test:load-envs": "dotenv -e .env.test",
@@ -20,13 +20,17 @@
     "test:migration:run": "npm run test:load-envs prisma migrate deploy",
     "test:migration:generate": "npm run test:load-envs prisma migrate dev",
     "dev:load-envs": "dotenv -e .env.development",
-    "dev:migrate:run": "npm run dev:load-envs prisma migrate deploy && npm run start",
+    "dev:migrate:run": "npm run migration:generate && npm run start",
     "dev:migration:run": "npm run dev:load-envs prisma migrate deploy",
-    "dev:migration:generate": "npm run dev:load-envs prisma migrate dev"
+    "dev:migration:generate": "npm run dev:load-envs prisma migrate dev",
+    "dev:seed": "npm run dev:load-envs prisma db seed"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "prisma": {
+    "seed": "npm run dev:load-envs -- ts-node prisma/seed.ts"
+  },
   "devDependencies": {
     "@faker-js/faker": "^7.6.0",
     "@types/bcrypt": "^5.0.0",
