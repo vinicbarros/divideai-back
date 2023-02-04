@@ -9,6 +9,7 @@ const data = [
   { name: "Investimento" },
   { name: "Churrasco" },
   { name: "Rolê" },
+  { name: "Outro" },
 ];
 
 async function main() {
