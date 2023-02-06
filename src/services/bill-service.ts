@@ -104,12 +104,33 @@ async function getCategory() {
   return categories;
 }
 
+async function buildResume(userId: number) {
+  const paidBills = await billRepository.countPaidBill(userId);
+  const pendingBills = await billRepository.countPendingBill(userId);
+  let totalPaid = 0;
+  paidBills.forEach((bill) => {
+    totalPaid += bill.value;
+  });
+
+  return {
+    paidBills: paidBills.length,
+    pendingBills: pendingBills.length,
+    totalPaid: totalPaid,
+  } as ResumeType;
+}
+
 type ListType = {
   userId: number;
   value: number;
   billId: number;
   paymentStatus: billType;
 }[];
+
+type ResumeType = {
+  paidBills: number;
+  pendingBills: number;
+  totalPaid: number;
+};
 
 const billService = {
   postNewBill,
@@ -118,6 +139,7 @@ const billService = {
   deleteBills,
   payBills,
   getCategory,
+  buildResume,
 };
 
 export default billService;

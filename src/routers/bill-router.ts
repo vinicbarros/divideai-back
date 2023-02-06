@@ -3,6 +3,7 @@ import {
   deleteBill,
   getBills,
   getCategories,
+  getResumeBills,
   getShortBills,
   updateBills,
 } from "@/controllers";
@@ -19,6 +20,7 @@ billRouter
   .get("/category/find", getCategories)
   .get("/:billId", getBills)
   .delete("/:billId", deleteBill)
-  .post("/:billId/paid", updateBills);
+  .post("/:billId/paid", updateBills)
+  .get("/infos/resume", getResumeBills);
 
 export { billRouter };

@@ -140,6 +140,24 @@ async function findCategories() {
   return await prisma.category.findMany();
 }
 
+async function countPaidBill(userId: number) {
+  return await prisma.userBill.findMany({
+    where: {
+      userId,
+      paymentStatus: "PAID",
+    },
+  });
+}
+
+async function countPendingBill(userId: number) {
+  return await prisma.userBill.findMany({
+    where: {
+      userId,
+      paymentStatus: "PENDING",
+    },
+  });
+}
+
 type CreateBillParams = Omit<BillDataParams, "usersBill">;
 
 type UsersListParams = {
@@ -160,6 +178,8 @@ const billRepository = {
   deleteBillAndUserBills,
   putUserBill,
   findCategories,
+  countPaidBill,
+  countPendingBill,
 };
 
 export default billRepository;

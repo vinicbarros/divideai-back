@@ -59,3 +59,11 @@ export async function getCategories(req: AuthenticatedRequest, res: Response) {
 
   return res.status(httpStatus.OK).send(result);
 }
+
+export async function getResumeBills(req: AuthenticatedRequest, res: Response) {
+  const { userId } = req;
+
+  const result = await billService.buildResume(userId);
+
+  return res.status(httpStatus.OK).send(result);
+}

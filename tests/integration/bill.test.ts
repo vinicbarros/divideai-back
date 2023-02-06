@@ -531,3 +531,65 @@ describe("POST /bill/:billId/paid", () => {
     });
   });
 });
+
+describe("GET /bill/infos/resume", () => {
+  it("should respond with status 401 if no token is no given", async () => {
+    const response = await server.get("/bill/1/paid");
+
+    expect(response.status).toBe(httpStatus.UNAUTHORIZED);
+  });
+
+  it("should respond with status 401 if given token is not valid", async () => {
+    const token = faker.lorem.word();
+
+    const response = await server
+      .get("/bill/infos/resume")
+      .set("Authorization", `Bearer ${token}`);
+
+    expect(response.status).toBe(httpStatus.UNAUTHORIZED);
+  });
+
+  it("should respond with status 401 if there is no session for given token", async () => {
+    const userWithoutSession = await createUser();
+    const token = jwt.sign(
+      { userId: userWithoutSession.id },
+      process.env.JWT_SECRET as string
+    );
+
+    const response = await server
+      .get("/bill/infos/resume")
+      .set("Authorization", `Bearer ${token}`);
+
+    expect(response.status).toBe(httpStatus.UNAUTHORIZED);
+  });
+
+  describe("when token is valid", () => {
+    it("should respond with status 200 and resume bills data", async () => {
+      const user = await createUser();
+      const token = await generateValidToken(user);
+      const category = await createCategory();
+      const createBillData = {
+        categoryId: category.id,
+        ownerId: user.id,
+      };
+      const bill = await createBill(createBillData);
+      const data = {
+        billId: bill.id,
+        userId: user.id,
+      };
+
+      await createUsersBill(data);
+
+      const response = await server
+        .get(`/bill/infos/resume`)
+        .set("Authorization", `Bearer ${token}`);
+
+      expect(response.status).toBe(httpStatus.OK);
+      expect(response.body).toEqual({
+        paidBills: expect.any(Number),
+        pendingBills: expect.any(Number),
+        totalPaid: expect.any(Number),
+      });
+    });
+  });
+});
