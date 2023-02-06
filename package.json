@@ -16,6 +16,7 @@
     "test:load-envs": "dotenv -e .env.test",
     "test:watch": "npm run test --watch",
     "test:staged": "npm run test --findRelatedTests",
+    "test:migrate:run": "npm run test:migration:generate && npm run test",
     "test:coverage": "jest --passWithNoTests --runInBand --forceExit --coverage --collectCoverageFrom='./src/**'",
     "test:migration:run": "npm run test:load-envs prisma migrate deploy",
     "test:migration:generate": "npm run test:load-envs prisma migrate dev",

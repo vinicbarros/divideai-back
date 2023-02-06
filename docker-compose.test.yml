@@ -22,7 +22,7 @@ services:
       - .:/urs/src
       - /usr/src/node_modules
     entrypoint: dockerize -wait tcp://postgres:5432 -timeout 20s docker-entrypoint.sh
-    command: "npm run dev:migrate:run"
+    command: "npm run test:migrate:run"
     depends_on:
       - postgres
 

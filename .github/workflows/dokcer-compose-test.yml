@@ -3,12 +3,12 @@ on:
     branches:
       - main
 
-name: Test to docker-compose
+name: Run Integration Tests
 jobs:
   build_and_run:
     runs-on: ubuntu-latest
 
-    timeout-minutes: 25
+    timeout-minutes: 20
 
     steps:
       - name: Checkout
