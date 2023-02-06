@@ -1,0 +1,30 @@
+version: "3"
+services:
+  postgres:
+    image: postgres
+    container_name: postgres
+    restart: always
+    ports:
+      - 2345:5432
+    env_file:
+      - .env.test
+    volumes:
+      - volume_postgres:/var/lib/postgresql/data
+
+  app_node:
+    build: .
+    container_name: app_node
+    ports:
+      - 4000:4000
+    env_file:
+      - .env.test
+    volumes:
+      - .:/urs/src
+      - /usr/src/node_modules
+    entrypoint: dockerize -wait tcp://postgres:5432 -timeout 20s docker-entrypoint.sh
+    command: "npm run dev:migrate:run"
+    depends_on:
+      - postgres
+
+volumes:
+  volume_postgres:
