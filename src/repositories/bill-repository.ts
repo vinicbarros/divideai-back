@@ -85,6 +85,14 @@ async function findUserBillByUserIdAndBillId({
   });
 }
 
+async function findUserBillByBillId(billId: number) {
+  return await prisma.userBill.findMany({
+    where: {
+      billId,
+    },
+  });
+}
+
 async function findBillDetails(billId: number) {
   return prisma.bill.findFirst({
     where: {
@@ -158,6 +166,17 @@ async function countPendingBill(userId: number) {
   });
 }
 
+async function updateBill(billId: number) {
+  return await prisma.bill.update({
+    where: {
+      id: billId,
+    },
+    data: {
+      billStatus: billType.PAID,
+    },
+  });
+}
+
 type CreateBillParams = Omit<BillDataParams, "usersBill">;
 
 type UsersListParams = {
@@ -174,12 +193,14 @@ const billRepository = {
   findResumeUsersBill,
   findBillById,
   findUserBillByUserIdAndBillId,
+  findUserBillByBillId,
   findBillDetails,
   deleteBillAndUserBills,
   putUserBill,
   findCategories,
   countPaidBill,
   countPendingBill,
+  updateBill,
 };
 
 export default billRepository;

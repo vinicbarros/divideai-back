@@ -95,6 +95,13 @@ async function payBills({ userId, billId }: { userId: number; billId: number }) 
   const userBill = await billRepository.findUserBillByUserIdAndBillId({ userId, billId });
   const payBill = await billRepository.putUserBill(userBill.id);
 
+  const usersBill = await billRepository.findUserBillByBillId(billId);
+  const filteredBill = usersBill.filter(
+    (bill) => bill.paymentStatus === billType.PENDING
+  );
+  if (filteredBill.length === 0) {
+    await billRepository.updateBill(billId);
+  }
   return payBill;
 }
 
