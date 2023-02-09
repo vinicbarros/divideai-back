@@ -7,6 +7,7 @@ export async function generateValidBillBody(categoryId?: number) {
   const billBody = {
     name: faker.lorem.word(),
     value: faker.datatype.number(),
+    pixKey: faker.lorem.word(),
     categoryId: categoryId || faker.datatype.number(),
     expireDate: dayjs().add(7, "day").toDate(),
     billStatus: "PENDING",
@@ -33,6 +34,7 @@ export async function createBill({
     data: {
       name: faker.lorem.word(),
       value: faker.datatype.number(),
+      pixKey: faker.lorem.word(),
       categoryId: categoryId,
       ownerId: ownerId,
       billStatus: billType.PENDING,

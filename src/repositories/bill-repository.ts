@@ -15,6 +15,7 @@ async function create(data: CreateBillParams) {
     data: {
       name: data.name,
       value: data.value,
+      pixKey: data.pixKey,
       expireDate: data.expireDate,
       categoryId: data.categoryId,
       ownerId: data.ownerId,
@@ -102,6 +103,7 @@ async function findBillDetails(billId: number) {
       id: true,
       name: true,
       value: true,
+      pixKey: true,
       expireDate: true,
       ownerId: true,
       billStatus: true,

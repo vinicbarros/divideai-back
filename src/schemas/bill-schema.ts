@@ -10,6 +10,7 @@ const userListSchema = Joi.object<UserListSchema>({
 export const billSchema = Joi.object<BillDataParams>({
   name: Joi.string().required(),
   value: Joi.number().required(),
+  pixKey: Joi.string().required(),
   categoryId: Joi.number().required(),
   billStatus: Joi.string().valid("PENDING", "PAID").required(),
   expireDate: Joi.date().required(),

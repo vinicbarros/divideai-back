@@ -13,6 +13,7 @@ model bill {
   id         Int        @id @default(autoincrement())
   name       String     @db.VarChar(255)
   value      Int
+  pixKey     String
   categoryId Int
   ownerId    Int
   billStatus billType

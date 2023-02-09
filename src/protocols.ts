@@ -20,6 +20,7 @@ export type enrollmentParams = {
 export type BillDataParams = {
   name: string;
   value: number;
+  pixKey: string;
   categoryId: number;
   ownerId: number;
   expireDate: Date;

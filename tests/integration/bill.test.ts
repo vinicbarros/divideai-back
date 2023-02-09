@@ -178,6 +178,7 @@ describe("POST /bill", () => {
         const body = {
           name: faker.lorem.word(),
           value: faker.datatype.number({ min: 10, max: 50 }),
+          pixKey: faker.lorem.lines(),
           categoryId: category.id,
           expireDate: dayjs().add(7, "day").toDate(),
           billStatus: "PENDING",
@@ -304,6 +305,7 @@ describe("GET /bill/:billId", () => {
           id: bill.id,
           name: bill.name,
           value: bill.value,
+          pixKey: bill.pixKey,
           expireDate: bill.expireDate.toISOString(),
           ownerId: bill.ownerId,
           billStatus: bill.billStatus,

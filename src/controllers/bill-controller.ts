@@ -4,12 +4,13 @@ import { Response } from "express";
 import httpStatus from "http-status";
 
 export async function createBill(req: AuthenticatedRequest, res: Response) {
-  const { name, value, categoryId, billStatus, expireDate, usersBill } = req.body;
+  const { name, value, pixKey, categoryId, billStatus, expireDate, usersBill } = req.body;
   const ownerId = req.userId;
 
   const result = await billService.postNewBill({
     name,
     value,
+    pixKey,
     categoryId,
     billStatus,
     expireDate,
