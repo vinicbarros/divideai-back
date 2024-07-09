@@ -1,67 +1,65 @@
 generator client {
   provider = "prisma-client-js"
-  engineType = "binary"
-  previewFeatures = ["fullTextSearch"]
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mongodb"
   url      = env("DATABASE_URL")
 }
 
 model bill {
-  id         Int        @id @default(autoincrement())
-  name       String     @db.VarChar(255)
+  id         String     @id @default(auto()) @map("_id") @db.ObjectId
+  name       String
   value      Int
   pixKey     String
-  categoryId Int
-  ownerId    Int
+  categoryId String     @db.ObjectId
+  ownerId    String     @db.ObjectId
   billStatus billType
-  expireDate DateTime   @db.Timestamp(6)
-  createdAt  DateTime?  @default(now()) @db.Timestamp(6)
+  expireDate DateTime
+  createdAt  DateTime?  @default(now())
   category   category   @relation(fields: [categoryId], references: [id])
   users      users      @relation(fields: [ownerId], references: [id])
   userBill   userBill[]
 }
 
 model category {
-  id   Int    @id @default(autoincrement())
-  name String @db.VarChar(255)
+  id   String @id @default(auto()) @map("_id") @db.ObjectId
+  name String
   bill bill[]
 }
 
 model friendship {
-  id                               Int          @id @default(autoincrement())
-  userId                           Int
-  friendId                         Int
+  id                               String      @id @default(auto()) @map("_id") @db.ObjectId
+  userId                           String      @db.ObjectId
+  friendId                         String      @db.ObjectId
   requestStatus                    requestType
-  users_friendship_friendIdTousers users        @relation("friendship_friendIdTousers", fields: [friendId], references: [id])
-  users_friendship_userIdTousers   users        @relation("friendship_userIdTousers", fields: [userId], references: [id])
+  users_friendship_friendIdTousers users       @relation("friendship_friendIdTousers", fields: [friendId], references: [id])
+  users_friendship_userIdTousers   users       @relation("friendship_userIdTousers", fields: [userId], references: [id])
 }
 
 model session {
-  id     Int    @id @default(autoincrement())
-  userId Int
+  id     String @id @default(auto()) @map("_id") @db.ObjectId
+  userId String @db.ObjectId
   token  String
   users  users  @relation(fields: [userId], references: [id])
 }
 
 model userBill {
-  id            Int       @id @default(autoincrement())
-  userId        Int
-  billId        Int
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId        String   @db.ObjectId
+  billId        String   @db.ObjectId
   value         Int
   paymentStatus billType
-  bill          bill      @relation(fields: [billId], references: [id])
-  users         users     @relation(fields: [userId], references: [id])
+  bill          bill     @relation(fields: [billId], references: [id])
+  users         users    @relation(fields: [userId], references: [id])
 }
 
 model users {
-  id                                    Int          @id @default(autoincrement())
-  email                                 String       @unique @db.VarChar(255)
-  name String @db.VarChar(255)
-  password                              String?      @db.VarChar(255)
-  createdAt                             DateTime?    @default(now()) @db.Timestamp(6)
+  id                                    String       @id @default(auto()) @map("_id") @db.ObjectId
+  email                                 String       @unique
+  name                                  String
+  password                              String?
+  createdAt                             DateTime?    @default(now())
   friendship_friendship_friendIdTousers friendship[] @relation("friendship_friendIdTousers")
   friendship_friendship_userIdTousers   friendship[] @relation("friendship_userIdTousers")
   session                               session[]

@@ -57,7 +57,7 @@ async function getUser(email: string) {
   return user as GetUserParams;
 }
 
-async function createSession(userId: number) {
+async function createSession(userId: string) {
   const token = jwt.sign({ userId }, process.env.JWT_SECRET as string);
   await sessionRepository.create({
     token,
@@ -73,7 +73,7 @@ async function validatePassword(password: string, userPassword: string) {
 }
 
 type GetUserParams = {
-  id: number;
+  id: string;
   email: string;
   name: string;
   password: string;

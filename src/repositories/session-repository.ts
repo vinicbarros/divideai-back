@@ -1,6 +1,6 @@
 import { prisma } from "@/config";
 
-async function create({ token, userId }: { token: string; userId: number }) {
+async function create({ token, userId }: { token: string; userId: string }) {
   return prisma.session.create({
     data: {
       token,

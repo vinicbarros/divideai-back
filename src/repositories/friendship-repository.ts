@@ -14,8 +14,8 @@ async function findFriendshipUserFriend({
 }
 
 type findFriendshipUserFriendParams = {
-  userId: number;
-  friendId: number;
+  userId: string;
+  friendId: string;
 };
 
 async function createFriendRequest({ userId, friendId }) {
@@ -28,7 +28,7 @@ async function createFriendRequest({ userId, friendId }) {
   });
 }
 
-async function getPendingFriendRequestYouReceived(userId: number) {
+async function getPendingFriendRequestYouReceived(userId: string) {
   return await prisma.friendship.findMany({
     where: {
       friendId: userId,
@@ -47,7 +47,7 @@ async function getPendingFriendRequestYouReceived(userId: number) {
   });
 }
 
-async function getPendingFriendRequestYouSended(userId: number) {
+async function getPendingFriendRequestYouSended(userId: string) {
   return await prisma.friendship.findMany({
     where: {
       userId: userId,
@@ -66,7 +66,7 @@ async function getPendingFriendRequestYouSended(userId: number) {
   });
 }
 
-async function getFriendRequestById(id: number) {
+async function getFriendRequestById(id: string) {
   return await prisma.friendship.findFirst({
     where: {
       id,
@@ -88,7 +88,7 @@ async function updateFriendRequest({
   });
 }
 
-async function deleteFriendRequest(friendRequestId: number) {
+async function deleteFriendRequest(friendRequestId: string) {
   return await prisma.friendship.delete({
     where: {
       id: friendRequestId,
@@ -96,7 +96,7 @@ async function deleteFriendRequest(friendRequestId: number) {
   });
 }
 
-async function getAcceptedFriendRequestYouReceived(userId: number) {
+async function getAcceptedFriendRequestYouReceived(userId: string) {
   return await prisma.friendship.findMany({
     where: {
       friendId: userId,
@@ -115,7 +115,7 @@ async function getAcceptedFriendRequestYouReceived(userId: number) {
   });
 }
 
-async function getAcceptedFriendRequestYouSended(userId: number) {
+async function getAcceptedFriendRequestYouSended(userId: string) {
   return await prisma.friendship.findMany({
     where: {
       userId: userId,
@@ -135,7 +135,7 @@ async function getAcceptedFriendRequestYouSended(userId: number) {
 }
 
 type updateFriendRequestType = {
-  friendRequestId: number;
+  friendRequestId: string;
   requestStatus: requestType;
 };
 

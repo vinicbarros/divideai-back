@@ -8,10 +8,9 @@ async function sendFriendRequestPost({
   userId,
   friendId,
 }: {
-  userId: number;
-  friendId: number;
+  userId: string;
+  friendId: string;
 }) {
-  if (isNaN(friendId) || friendId < 1 || friendId === userId) throw badRequestError();
   await checkUserById(friendId);
 
   const requestExist = await friendshipRepository.findFriendshipUserFriend({
@@ -30,7 +29,7 @@ async function sendFriendRequestPost({
   };
 }
 
-async function receivedFriendRequestOfUser(userId: number) {
+async function receivedFriendRequestOfUser(userId: string) {
   const result = await friendshipRepository.getPendingFriendRequestYouReceived(userId);
 
   const friends: FriendList[] = [];
@@ -42,7 +41,7 @@ async function receivedFriendRequestOfUser(userId: number) {
   return friends;
 }
 
-async function sendedFriendRequestOfUser(userId: number) {
+async function sendedFriendRequestOfUser(userId: string) {
   const result = await friendshipRepository.getPendingFriendRequestYouSended(userId);
 
   const friends: FriendList[] = [];
@@ -59,8 +58,6 @@ async function acceptOrRejectFriendRequest({
   friendRequestId,
   requestStatus,
 }: updateFriendRequestType) {
-  if (isNaN(friendRequestId) || friendRequestId < 1) throw badRequestError();
-
   const friendRequest = await friendshipRepository.getFriendRequestById(friendRequestId);
   if (!friendRequest) throw notFoundError();
 
@@ -82,11 +79,9 @@ async function deleteSendedFriendRequest({
   userId,
   idFriendR,
 }: {
-  userId: number;
-  idFriendR: number;
+  userId: string;
+  idFriendR: string;
 }) {
-  if (isNaN(idFriendR) || idFriendR < 1) throw badRequestError();
-
   const friendRequest = await friendshipRepository.getFriendRequestById(idFriendR);
   if (!friendRequest) throw notFoundError();
 
@@ -98,7 +93,7 @@ async function deleteSendedFriendRequest({
   return deletedFriendRequest;
 }
 
-async function getYourFriendsList(userId: number) {
+async function getYourFriendsList(userId: string) {
   const acceptedSendedRequests =
     await friendshipRepository.getAcceptedFriendRequestYouSended(userId);
   const acceptedReceivedRequests =
@@ -117,7 +112,7 @@ async function getYourFriendsList(userId: number) {
   return [...friendsReceived, ...friendsSended];
 }
 
-async function checkUserById(id: number) {
+async function checkUserById(id: string) {
   const userExist = await userRepository.findUserById(id);
   if (!userExist) throw notFoundError();
 
@@ -134,14 +129,14 @@ const friendshipService = {
 };
 
 type updateFriendRequestType = {
-  userId: number;
-  friendRequestId: number;
+  userId: string;
+  friendRequestId: string;
   requestStatus: requestType;
 };
 
 type FriendList = {
-  id: number;
-  friendRequestId?: number;
+  id: string;
+  friendRequestId?: string;
   name: string;
   email: string;
 };

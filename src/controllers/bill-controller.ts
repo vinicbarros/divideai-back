@@ -29,7 +29,7 @@ export async function getShortBills(req: AuthenticatedRequest, res: Response) {
 }
 
 export async function getBills(req: AuthenticatedRequest, res: Response) {
-  const billId = Number(req.params.billId);
+  const billId = req.params.billId;
   const { userId } = req;
 
   const result = await billService.getBill({ userId, billId });
@@ -38,7 +38,7 @@ export async function getBills(req: AuthenticatedRequest, res: Response) {
 }
 
 export async function deleteBill(req: AuthenticatedRequest, res: Response) {
-  const billId = Number(req.params.billId);
+  const billId = req.params.billId;
   const { userId } = req;
 
   await billService.deleteBills({ userId, billId });
@@ -47,7 +47,7 @@ export async function deleteBill(req: AuthenticatedRequest, res: Response) {
 }
 
 export async function updateBills(req: AuthenticatedRequest, res: Response) {
-  const billId = Number(req.params.billId);
+  const billId = req.params.billId;
   const { userId } = req;
 
   await billService.payBills({ userId, billId });

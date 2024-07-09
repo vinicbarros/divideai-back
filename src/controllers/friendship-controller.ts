@@ -50,7 +50,7 @@ export async function deleteSendedFriendRequests(
 ) {
   const { userId } = req;
   const { friendRequestId } = req.params;
-  const idFriendR = Number(friendRequestId);
+  const idFriendR = friendRequestId;
 
   await friendshipService.deleteSendedFriendRequest({ userId, idFriendR });
   return res.sendStatus(httpStatus.OK);

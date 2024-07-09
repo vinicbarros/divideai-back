@@ -24,7 +24,7 @@ async function findUserByEmail(email: string) {
   });
 }
 
-async function findUserById(id: number) {
+async function findUserById(id: string) {
   return await prisma.users.findFirst({
     where: {
       id,

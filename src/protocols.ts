@@ -12,7 +12,7 @@ export type SignUpParams = {
 };
 
 export type enrollmentParams = {
-  userId: number;
+  userId: string;
   name: string;
   profileImage: string | undefined;
 };
@@ -21,18 +21,18 @@ export type BillDataParams = {
   name: string;
   value: number;
   pixKey: string;
-  categoryId: number;
-  ownerId: number;
+  categoryId: string;
+  ownerId: string;
   expireDate: Date;
   billStatus: billType;
   usersBill: {
-    userId: number;
+    userId: string;
     value: number;
   }[];
 };
 
 export type UserListType = {
-  userId: number;
+  userId: string;
   value: number;
 }[];
 

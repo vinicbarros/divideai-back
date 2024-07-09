@@ -28,7 +28,7 @@ async function createUsersBill({
   userList,
   billStatus,
 }: {
-  billId: number;
+  billId: string;
   userList: UserListType;
   billStatus: billType;
 }) {
@@ -45,15 +45,13 @@ async function createUsersBill({
   await billRepository.createUsersBill(list);
 }
 
-async function getResumeBills(userId: number) {
+async function getResumeBills(userId: string) {
   const resume = await billRepository.findResumeUsersBill(userId);
 
   return resume;
 }
 
-async function getBill({ userId, billId }: { userId: number; billId: number }) {
-  if (isNaN(billId) || billId < 1) throw badRequestError();
-
+async function getBill({ userId, billId }: { userId: string; billId: string }) {
   const bill = await billRepository.findBillById(billId);
   if (!bill) throw notFoundError();
 
@@ -68,9 +66,7 @@ async function getBill({ userId, billId }: { userId: number; billId: number }) {
   return billDetails;
 }
 
-async function deleteBills({ userId, billId }: { userId: number; billId: number }) {
-  if (isNaN(billId) || billId < 1) throw badRequestError();
-
+async function deleteBills({ userId, billId }: { userId: string; billId: string }) {
   const bill = await billRepository.findBillById(billId);
   if (!bill) throw notFoundError();
   if (bill.ownerId !== userId) throw unauthorizedError();
@@ -80,9 +76,7 @@ async function deleteBills({ userId, billId }: { userId: number; billId: number 
   return deletedBill;
 }
 
-async function payBills({ userId, billId }: { userId: number; billId: number }) {
-  if (isNaN(billId) || billId < 1) throw badRequestError();
-
+async function payBills({ userId, billId }: { userId: string; billId: string }) {
   const bill = await billRepository.findBillById(billId);
   if (!bill) throw notFoundError();
 
@@ -111,7 +105,7 @@ async function getCategory() {
   return categories;
 }
 
-async function buildResume(userId: number) {
+async function buildResume(userId: string) {
   const paidBills = await billRepository.countPaidBill(userId);
   const pendingBills = await billRepository.countPendingBill(userId);
   let totalPaid = 0;
@@ -127,9 +121,9 @@ async function buildResume(userId: number) {
 }
 
 type ListType = {
-  userId: number;
+  userId: string;
   value: number;
-  billId: number;
+  billId: string;
   paymentStatus: billType;
 }[];
 

@@ -2,7 +2,7 @@ import { prisma } from "@/config";
 import { BillDataParams } from "@/protocols";
 import { billType } from "@prisma/client";
 
-async function findCategoryById(id: number) {
+async function findCategoryById(id: string) {
   return prisma.category.findFirst({
     where: {
       id,
@@ -30,7 +30,7 @@ async function createUsersBill(data: UsersListParams) {
   });
 }
 
-async function findResumeUsersBill(userId: number) {
+async function findResumeUsersBill(userId: string) {
   return await prisma.userBill.findMany({
     where: {
       userId,
@@ -63,7 +63,7 @@ async function findResumeUsersBill(userId: number) {
   });
 }
 
-async function findBillById(id: number) {
+async function findBillById(id: string) {
   return await prisma.bill.findFirst({
     where: {
       id,
@@ -75,8 +75,8 @@ async function findUserBillByUserIdAndBillId({
   userId,
   billId,
 }: {
-  userId: number;
-  billId: number;
+  userId: string;
+  billId: string;
 }) {
   return await prisma.userBill.findFirst({
     where: {
@@ -86,7 +86,7 @@ async function findUserBillByUserIdAndBillId({
   });
 }
 
-async function findUserBillByBillId(billId: number) {
+async function findUserBillByBillId(billId: string) {
   return await prisma.userBill.findMany({
     where: {
       billId,
@@ -94,7 +94,7 @@ async function findUserBillByBillId(billId: number) {
   });
 }
 
-async function findBillDetails(billId: number) {
+async function findBillDetails(billId: string) {
   return prisma.bill.findFirst({
     where: {
       id: billId,
@@ -128,14 +128,14 @@ async function findBillDetails(billId: number) {
   });
 }
 
-async function deleteBillAndUserBills(billId: number) {
+async function deleteBillAndUserBills(billId: string) {
   return await prisma.$transaction([
     prisma.userBill.deleteMany({ where: { billId } }),
     prisma.bill.delete({ where: { id: billId } }),
   ]);
 }
 
-async function putUserBill(id: number) {
+async function putUserBill(id: string) {
   return await prisma.userBill.update({
     where: {
       id,
@@ -150,7 +150,7 @@ async function findCategories() {
   return await prisma.category.findMany();
 }
 
-async function countPaidBill(userId: number) {
+async function countPaidBill(userId: string) {
   return await prisma.userBill.findMany({
     where: {
       userId,
@@ -159,7 +159,7 @@ async function countPaidBill(userId: number) {
   });
 }
 
-async function countPendingBill(userId: number) {
+async function countPendingBill(userId: string) {
   return await prisma.userBill.findMany({
     where: {
       userId,
@@ -168,7 +168,7 @@ async function countPendingBill(userId: number) {
   });
 }
 
-async function updateBill(billId: number) {
+async function updateBill(billId: string) {
   return await prisma.bill.update({
     where: {
       id: billId,
@@ -182,8 +182,8 @@ async function updateBill(billId: number) {
 type CreateBillParams = Omit<BillDataParams, "usersBill">;
 
 type UsersListParams = {
-  billId: number;
-  userId: number;
+  billId: string;
+  userId: string;
   value: number;
   paymentStatus: billType;
 }[];
